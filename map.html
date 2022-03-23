@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+	<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/map.css">
+	<script src ="js/index.js"></script>
+    <script src ="js/map.js"></script>
+    <title>Map</title>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to Le Loger</h1>
+    </div>
+    <div class="container">
+        <div class="left " style="float:left; width:20%;">
+            <div id="menuContainer">
+                <div class="menuItem first">
+                    <div class="settingsIcon"></div>
+                    <button id="usericon" class="btn dropbtn"><i class="fa fa-user"></i></button>
+                    <div class="downArrowIcon"></div>
+                </div>
+                <div id="settingsMenu">
+                    <button onclick="findactiveuser()">findactiveuser !</button>
+                    <button onclick="signOut()">signout !</button>
+                </div>
+            </div>
+            <div class="form">
+                <h2>Enter your details here</h2>
+                <form action="">
+                    <div class="form-group">
+                      <label for="formGroupExampleInput">Place :</label>
+                      <input type="text" class="form-control" id="placename" placeholder="Place">
+                    </div>
+                    <div class="form-group">
+                      <label for="formGroupExampleInput2">where it is? :</label>
+                      <input type="text" class="form-control" id="location" placeholder="Where">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" onclick="findplace()" class="btn btn-secondary"><i class="fa fa-search" aria-hidden="true"></i>Search</button>
+                    </div>
+                  </form>
+            </div>
+        </div>
+        <div id="map"class="right"></div>
+    </div>
+    <script>
+        function initMap()
+        {
+            var location = {lat:19.418864 , lng:72.815619};
+            var map = new google.maps.Map(document.getElementById("map") , {
+                zoom:8, 
+                center : location
+            });
+            var marker = new google.maps.Marker({
+                position : location ,
+                map: map
+            });
+            
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA67RKcaqHa8ZdNclngrwKbrVOuJVmVXdo&callback=initMap"></script>
+</body>
+</html>
+
