@@ -1,5 +1,10 @@
 // 
 
+
+// manish AIzaSyALHxvDWGlUf4LzWlW-e2XS49Vnln2xXNc
+
+// AIzaSyA67RKcaqHa8ZdNclngrwKbrVOuJVmVXdo
+
 //AIzaSyChDoqgAPHt94rUgtRfzO3OZGe2_weJF0A
 
 
@@ -42,9 +47,11 @@ function findplace()
         console.log(data)
     })
     console.log("reached mapcall")
-    // mapcall()
-    moveToLocation(-33.890542 , 151.274856)
 }
+
+
+
+
 
 function findcolor(number)
 {
@@ -52,38 +59,3 @@ function findcolor(number)
     return colordict[number]
 }
 
-function mapcall()
-{
-    var locations = [
-        ['Bondi Beach', -33.890542, 151.274856, 4],
-        ['Coogee Beach', -33.923036, 151.259052, 5],
-        ['Cronulla Beach', -34.028249, 151.157507, 3],
-        ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-        ['Maroubra Beach', -33.950198, 151.259302, 1]
-        ];
-
-        var infowindow = new google.maps.InfoWindow();
-
-        var marker, i;
-        
-        for (i = 0; i < locations.length; i++) {  
-        marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            map: map
-        });
-        
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-            infowindow.setContent(locations[i][0]);
-            infowindow.open(map, marker);
-            }
-        })(marker, i));
-        }
-
-}
-
-function moveToLocation(lat, lng){
-    const center = new google.maps.LatLng(lat, lng);
-    // using global variable:
-    window.map.panTo(center);
-  }
