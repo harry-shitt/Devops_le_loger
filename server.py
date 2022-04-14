@@ -21,9 +21,9 @@ app.add_middleware(CORSMiddleware,allow_origins=origins)
 def root():
     return {"hello world"}
 
-@app.get("/locationresult1")
+@app.get("/locationresult")
 def root(location:str):
-    locationresult = k_mediod(location , 1)
+    locationresult = k_mediod(location)
     return  locationresult
     
 @app.get("/locationresult2")
@@ -31,7 +31,7 @@ def root(location:str):
     locationresult = k_mediod(location , 2)
     return  locationresult
 
-def k_mediod(location , type):
+def k_mediod(location):
 
     location = location.lower()
     location = location.replace(" " , "")
@@ -65,10 +65,10 @@ def k_mediod(location , type):
     rental_data['color'] = colorlist
 
 
-    if(type == 2):
-        rental_data_list = rental_data.values.tolist()
-        rentaljson = json.dumps(rental_data_list)
-        return rentaljson
+    # if(type == 2):
+    #     rental_data_list = rental_data.values.tolist()
+    #     rentaljson = json.dumps(rental_data_list)
+    #     return rentaljson
 
     #filering latitude and longitude
     rental_list = rental_data[["Easting" , "Northing" , "color"]].values.tolist()
@@ -96,6 +96,8 @@ def k_mediod(location , type):
     # print(data)
 
     datalist = data.values.tolist()
+    rental_data_list = rental_data.values.tolist()
+    datalist = rental_data_list + datalist
     datajson = json.dumps(datalist)
 
     # data = data.to_json(orient='column')
