@@ -1,14 +1,52 @@
 
 let map;
 let markers = [];
+let amenditiesmarekr = [];
+let rentalmarker = [];
 let geocoder;
 let responseDiv;
 let response;
+var place , location;
+let rentallocationlist =[];
 
+function getString(price  , buildingname , roomtype , desc)
+{
+    
+    let contentString =
+    '<div id="content">' +
+    '<div id="siteNotice">' +
+    "</div>" +
+    '<div id="bodyContent">' +
+    "<h3><b>Building Name</b>"+"&#160;"+ getprice(buildingname)+ "&#160;" +"</h3>"+
+    "<h3><b>Price</b>"+"&#160;"+ getbuildingname(price)+ "&#160;" +"</h3>"+
+    "<h3><b>Room</b>"+"&#160;"+ gettype(roomtype)+ "&#160;" +"</h3>"+
+    "<h3><b>Description</b>"+"&#160;"+ getdesc(desc)+ "&#160;" +"</h3>"+
+    "</div>" +
+    "</div>";
+    return contentString;
+}
 
+function getprice(price)
+{
+    return String(price);
+}
 
+function getbuildingname(buildingname)
+{
+    buildingname = buildingname.replace('\n' , ' ');
+    return buildingname;
+}
 
+function gettype(type)
+{
+    return(type);
+}
 
+function getdesc(desc)
+{
+    desc  = desc.replace('\n' , ' ');
+    return String(desc);
+}
 
 function setMapOnAll(map) {
   for (let i = 0; i < markers.length; i++) {
@@ -27,15 +65,41 @@ function deleteMarkers() {
 }
 
 
-function pinSymbol(color) {
-  return {
-    path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
-    fillColor: color,
-    fillOpacity: 1,
-    strokeColor: '#000',
-    strokeWeight: 2,
-    scale: 2
-  };
+// amenditeis 
+function setamenditiesmarker(map)
+{
+    for (let i = 0; i < amenditiesmarekr.length; i++) {
+        amenditiesmarekr[i].setMap(map);
+      }
+}
+
+function hideamenditiesmarkers() {
+    setamenditiesmarker(null);
+  }
+  
+  
+function deleteamenditiesMarkers() {
+    hideamenditiesmarkers();
+    amenditiesmarekr = [];
+}
+
+
+  // rental 
+function setrentalmarker(map)
+{
+    for (let i = 0; i < rentalmarker.length; i++) {
+        rentalmarker[i].setMap(map);
+    }
+}
+
+function hiderentalmarkers() {
+    setrentalmarker(null);
+}
+  
+  
+function deleterentalMarkers() {
+    hiderentalmarkers();
+    rentalmarker = [];
 }
 
 
@@ -60,39 +124,65 @@ function initMap()
   function codeAddress(address) 
     {
         deleteMarkers()
-    geocoder.geocode( {address:address}, function(results, status) 
-    {
-        if (status == google.maps.GeocoderStatus.OK) 
+        deleteamenditiesMarkers()
+        deleterentalMarkers()
+        geocoder.geocode( {address:address}, function(results, status) 
         {
-        map.setCenter(results[0].geometry.location);//center the map over the result
-        var marker = new google.maps.Marker(
+            if (status == google.maps.GeocoderStatus.OK) 
+            {
+            map.setCenter(results[0].geometry.location);//center the map over the result
+            var marker = new google.maps.Marker(
+            {
+                map: map,
+                position: results[0].geometry.location
+            });
+            markers.push(marker);
+            setMapOnAll(map);
+            } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+        });
+    }
+
+
+
+
+function finddistance()
+{
+
+    
+
+
+
+
+    for(var  i=0 ; i < rentallocationlist.length;i++)
+    {
+        let marker = new google.maps.Marker(
         {
             map: map,
-            position: results[0].geometry.location
+            position: {lat:rentallocationlist[i][1] , lng:rentallocationlist[i][2]},
+            icon : "assets/images/house.png",                    
+            opacity : 10,
         });
-        markers.push(marker);
-        setMapOnAll(map);
-        } else {
-        alert('Geocode was not successful for the following reason: ' + status);
+        let infowindow = new google.maps.InfoWindow({
+            content: getString(rentallocationlist[i][0] , rentallocationlist[i][6] , rentallocationlist[i][7] , rentallocationlist[i][8]),
+        });
+        marker.addListener("click", () => {
+            infowindow.open({
+                anchor: marker,
+                map,
+                shouldFocus: true,
+            });
+        });
+        rentalmarker.push(marker); 
     }
-    });
-    }
-
-   
-      function decription(price  , buildingname , roomtype , desc)
-      {
-          buildingname = String(buildingname);
-          buildingname = buildingname.replace('\n' , ' ');
-          desc  = desc.replace('\n' , ' ');
-          result = "It is a " + String(roomtype) + ' in ' + buildingname + ' Price : ' + String(price) + ' Description : ' +String(desc);
-            return result;
-      }
-
+    setrentalmarker(map);
+}
 
 
 function findplace()
 {
-    var place , location;
+   
     place = document.getElementById('placename');
     location = document.getElementById('location');
     place = place.value;
@@ -104,32 +194,41 @@ function findplace()
     address = place +" ," + location;
     codeAddress(address);
 
-    var clustringnodelist = [] , clusteringcenterlist = [];
+   var clustringnodelist = [] , clusteringcenterlist = [];
    let url1=new URL( "http://localhost:8000/locationresult")
    url1.searchParams.append('location',location)
     fetch(url1)
     .then(response => response.json())
     .then(data => {
-        data = JSON.parse(data)
-        var marker;
+        data = JSON.parse(data);
+        rentallocationlist = [];
         for(var i=0;i<data.length;i++)
         {
             if(data[i].length > 7)
             {
-                marker = new google.maps.Marker(
-                    {
-                        map: map,
-                        position: {lat:data[i][1] , lng:data[i][2]},
-                        title : decription(data[i][0] , data[i][6] , data[i][7] , data[i][8]),
-                        icon : "assets/images/house.png",                    
-                        opacity : 10,
-                      });
-                    markers.push(marker);   
+                rentallocationlist.push(data[i]);
+                // let marker = new google.maps.Marker(
+                // {
+                //     map: map,
+                //     position: {lat:data[i][1] , lng:data[i][2]},
+                //     icon : "assets/images/house.png",                    
+                //     opacity : 10,
+                // });
+                // let infowindow = new google.maps.InfoWindow({
+                //     content: getString(data[i][0] , data[i][6] , data[i][7] , data[i][8]),
+                // });
+                // marker.addListener("click", () => {
+                //     infowindow.open({
+                //         anchor: marker,
+                //         map,
+                //         shouldFocus: true,
+                //     });
+                // });
+                // rentalmarker.push(marker);   
             }
             else
             {
-                
-                marker = new google.maps.Marker(
+                let marker = new google.maps.Marker(
                     {
                         map: map,
                         position: {lat:data[i][1] , lng:data[i][2]},
@@ -137,11 +236,11 @@ function findplace()
                         opacity : 0.7,
                         icon: "assets/markers/" + String(data[i][6]) +".png"
                     });
-                    markers.push(marker);
+                    amenditiesmarekr.push(marker);
             }
         }
-        setMapOnAll(map);
-
+        finddistance();
+        setamenditiesmarker(map);
     });   
 
 
