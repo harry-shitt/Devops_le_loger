@@ -53,10 +53,10 @@ def k_mediod(location):
     city = location
     
 
-    rental_data = pd.read_csv(r"Data/Rental_Data.csv",encoding='utf-8')
-    atm_data = pd.read_csv(r"Data/Atm_Data.csv",encoding='utf-8')
-    hospital_data = pd.read_csv(r"Data/Hospital_Data.csv",encoding='utf-8')
-    restaurent_data = pd.read_csv(r"Data/Restaurent_Data.csv",encoding='utf-8')
+    rental_data = pd.read_csv(r"app/Data/Rental_Data.csv",encoding='utf-8')
+    atm_data = pd.read_csv(r"app/Data/Atm_Data.csv",encoding='utf-8')
+    hospital_data = pd.read_csv(r"app/Data/Hospital_Data.csv",encoding='utf-8')
+    restaurent_data = pd.read_csv(r"app/Data/Restaurent_Data.csv",encoding='utf-8')
 
 
     rental_data = rental_data[rental_data["City"] == city]
@@ -124,7 +124,7 @@ def k_mediod(location):
     
    
 
-    #filering latitude and longitude
+    #filering easting and northing
     rental_list = rental_data[["Easting" , "Northing" , "color"]].values.tolist()
     data_list = data[["Easting" , "Northing"]].values.tolist()
 
@@ -155,7 +155,7 @@ def k_mediod(location):
     for i in range(len(rental_data_list)):
         rental_data_list[i].append(rental_lat_lng[i][0])
         rental_data_list[i].append(rental_lat_lng[i][1])
-        print(rental_lat_lng[i][1])
+        # print(rental_lat_lng[i][1])
 
     datalist = rental_data_list + datalist
     datajson = json.dumps(datalist)
@@ -316,6 +316,7 @@ def havershine(location):
         print(locationlist[ele[0]][2])
 
     print(locationlist)
+
 uvicorn.run(app, host="0.0.0.0", port=8000)
 
 

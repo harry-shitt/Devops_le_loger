@@ -153,7 +153,7 @@ function initMap()
             if (status == google.maps.GeocoderStatus.OK) 
             {
                 loc_lat = results[0].geometry.location.lng();
-                console.log(loc_lat)
+                // console.log(loc_lat)
                 map.setCenter(results[0].geometry.location);//center the map over the result
                 var marker = new google.maps.Marker(
                 {
@@ -176,7 +176,7 @@ function finddistance()
   
     for(var  i=0 ; i < rentallocationlist.length;i++)
     {
-        console.log(rentallocationlist[i][14])
+        // console.log(rentallocationlist[i][14])
         let marker = new google.maps.Marker(
         {
             map: map,
